@@ -1,0 +1,50 @@
+# Archivos de compilación y temporales
+bin/
+obj/
+*.exe
+*.dll
+*.pdb
+*.cache
+*.log
+*.vs/
+*.user
+*.suo
+*.ntvs*
+*.njsproj
+*.sln.cache
+*.swp
+
+# Configuración y archivos de entorno
+.env
+appsettings.json
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+
+# Archivos generados por NuGet
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+
+# Logs y debugging
+logs/
+*.log
+*.tlog
+*.ilk
+*.exp
+*.iobj
+
+# Configuración de Rider y VS Code
+.idea/
+.vscode/
+.vs/
+
+# Configuración de dependencias y bloqueo
+*.lock
+project.lock.json
+global.json
+
+# Archivos temporales del sistema
+.DS_Store
+Thumbs.db

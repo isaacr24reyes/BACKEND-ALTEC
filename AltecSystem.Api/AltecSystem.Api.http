@@ -1,0 +1,6 @@
+@AltecSystem.Api_HostAddress = http://localhost:5157
+
+GET {{AltecSystem.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
