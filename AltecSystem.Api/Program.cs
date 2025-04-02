@@ -1,3 +1,5 @@
+using AltecSystem.Application.Commands.Products;
+using AltecSystem.Application.Handlers.Products;
 using AltecSystem.Application.Interfaces;
 using AltecSystem.Infrastructure.Services;
 using AltecSystem.Infrastructure.Repositories;
@@ -8,7 +10,7 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Registrar MediatR con el nuevo método
+// Registrar MediatR con el ensamblado correcto
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
 // Configuración de CORS
@@ -27,12 +29,17 @@ builder.Services.AddDbContext<AltecSystemDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
+// Registrar los servicios necesarios
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
+// Registrar el repositorio de productos y su handler
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddTransient<IRequestHandler<CreateProductCommand, Guid>, CreateProductHandler>();
+
+// Configuración de controladores y Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "ALTEC-SYSTEM API", Version = "v1" });
