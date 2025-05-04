@@ -5,12 +5,18 @@
   </ItemGroup>
   <ItemGroup>
   <PackageReference Include="MediatR" Version="12.0.1" />
+  <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.3.0" />
+  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.3" />
+  <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.0.2" />
 </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.0" />
+<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
 
+    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="8.0.0" />
   </ItemGroup>
-
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" /> <!-- Asegúrate de que este paquete esté presente -->
+  </ItemGroup>
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

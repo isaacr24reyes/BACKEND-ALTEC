@@ -12,7 +12,8 @@ public class Product
     public decimal PrecioMayorista { get; set; }
     public decimal PrecioImportacion { get; set; }
     public string Descripcion { get; set; }
-    public byte[] Foto { get; set; }  // Aquí se almacenará la foto como datos binarios
+    
+    public string Foto { get; set; }
     public bool IsActive { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }

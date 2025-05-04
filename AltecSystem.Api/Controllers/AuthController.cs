@@ -1,12 +1,17 @@
 using AltecSystem.Application.Commands.User;
+using AltecSystem.Application.DTOs.User;
 using AltecSystem.Application.Interfaces;
+using AltecSystem.Application.Queries.User;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
+
 [Route("api/auth")]
 [ApiController]
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
+    private readonly IUserRepository _userRepository;
     private readonly IMediator _mediator;
 
     public AuthController(IAuthService authService, IMediator mediator)
@@ -24,16 +29,15 @@ public class AuthController : ControllerBase
 
         return Ok(new {token});
     }
-
-    [HttpGet("user/{username}")]
-    public async Task<IActionResult> GetUserByUsername(string username)
+    [HttpGet("by-username")]
+    public async Task<ActionResult<UserDetailsDto>> GetByUsername([FromQuery] string username)
     {
-        var command = new GetUserByUsernameCommand(username);
-        var userDto = await _mediator.Send(command);
+        var result = await _mediator.Send(new GetUserByUsernameQuery(username));
 
-        if (userDto == null)
-            return NotFound(new { message = "Usuario no encontrado" });
+        if (result == null)
+            return NotFound("Usuario no encontrado.");
 
-        return Ok(userDto);
+        return Ok(result);
     }
+    
 }

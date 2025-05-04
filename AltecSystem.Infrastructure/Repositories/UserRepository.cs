@@ -3,7 +3,6 @@ using AltecSystem.Domain.Entities;
 using AltecSystem.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-using System.Threading.Tasks;
 
 namespace AltecSystem.Infrastructure.Repositories
 {

@@ -3,9 +3,9 @@
   <ItemGroup>
   <ProjectReference Include="..\AltecSystem.Application\AltecSystem.Application.csproj" />
     <ProjectReference Include="..\AltecSystem.Domain\AltecSystem.Domain.csproj" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.3" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.2" />
   </ItemGroup>
 

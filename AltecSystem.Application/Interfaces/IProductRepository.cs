@@ -5,4 +5,5 @@ namespace AltecSystem.Application.Interfaces;
 public interface IProductRepository
 {
     Task AddAsync(Product product);
+    Task<IEnumerable<Product>> GetActiveProductsAsync();
 }

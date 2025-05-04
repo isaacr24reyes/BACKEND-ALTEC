@@ -7,37 +7,39 @@ using AltecSystem.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Registrar MediatR con el ensamblado correcto
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+// ✅ Registrar MediatR buscando handlers desde el ensamblado de Application
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()); // Ensamblado de API
+    cfg.RegisterServicesFromAssembly(typeof(CreateProductHandler).Assembly); // Ensamblado de Application
+});
 
-// Configuración de CORS
+// ✅ Configuración de CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp", policy =>
     {
         policy.WithOrigins("http://localhost:4200", "http://192.168.100.10:4200")
-            .AllowAnyMethod()
-            .AllowAnyHeader();
+              .AllowAnyMethod()
+              .AllowAnyHeader();
     });
 });
 
-// Configuración de la base de datos
+// ✅ Configuración de la base de datos
 builder.Services.AddDbContext<AltecSystemDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
-// Registrar los servicios necesarios
+// ✅ Registrar interfaces y servicios
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-
-// Registrar el repositorio de productos y su handler
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddTransient<IRequestHandler<CreateProductCommand, Guid>, CreateProductHandler>();
 
-// Configuración de controladores y Swagger
+// ✅ Configuración de controladores y Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -47,17 +49,18 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Usar CORS
+// ✅ Usar CORS
 app.UseCors("AllowAngularApp");
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ALTEC-SYSTEM API v1"));
+    app.UseSwaggerUI(c =>
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "ALTEC-SYSTEM API v1")
+    );
 }
-
+app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
-
 app.Run();

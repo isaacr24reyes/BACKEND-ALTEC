@@ -1,34 +1,34 @@
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
-using MediatR; // Asegúrate de tener este espacio de nombres
+using MediatR; 
 
 namespace AltecSystem.Application.Commands.Products
 {
-    public class CreateProductCommand : IRequest<Guid> // Implementa IRequest<Guid>
+    public class CreateProductCommand : IRequest<Guid>
     {
-        [Required] // Campo obligatorio
+        [Required]
         public string Categoria { get; set; }
 
-        [Required] // Campo obligatorio
+        [Required] 
         public string Codigo { get; set; }
 
-        [Required] // Campo obligatorio
+        [Required] 
         public int Stock { get; set; }
-        [Required] // Campo obligatorio
+        [Required]
         public decimal Pvp { get; set; }
 
-        [Required] // Campo obligatorio
+        [Required]
         public decimal PrecioMayorista { get; set; }
 
-        [Required] // Campo obligatorio
+        [Required]
         public decimal PrecioImportacion { get; set; }
 
-        [Required] // Campo obligatorio
+        [Required]
         public string Descripcion { get; set; }
 
-        public IFormFile? Foto { get; set; } // Foto no es obligatorio
+        public IFormFile? Foto { get; set; }
 
-        [Required] // Campo obligatorio
+        [Required]
         public string CreatedBy { get; set; }
     }
 }

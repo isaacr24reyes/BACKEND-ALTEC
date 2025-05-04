@@ -10,15 +10,17 @@ namespace AltecSystem.Infrastructure.Persistence
         public DbSet<User> Login { get; set; }
         public DbSet<Product> Productos { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Username)
                 .IsUnique();
+            
             modelBuilder.Entity<Product>()
                 .Property(p => p.Foto)
-                .HasColumnType("varbinary(max)");
+                .HasColumnType("NVARCHAR(4000)"); // Cambiado de varbinary(max) a NVARCHAR(4000) para URL
+
+            // Otras configuraciones si las necesitas
         }
     }
 }

@@ -15,18 +15,46 @@ namespace AltecSystem.Api.Controllers
             _mediator = mediator;
         }
 
+        // Endpoint para crear producto
         [HttpPost]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> CreateProduct([FromForm] CreateProductCommand command)
         {
-            // Verifica si el modelo es válido
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState); // Si no es válido, devuelve un error de validación
+                return BadRequest(ModelState);
             }
 
             var productId = await _mediator.Send(command);
             return Ok(new { ProductId = productId });
         }
+        
+        [HttpGet]
+        public async Task<IActionResult> GetActiveProducts(
+            int pageNumber, 
+            int pageSize, 
+            string? filter, 
+            string? orderBy, 
+            string? sortOrder)
+        {
+            var query = new GetActiveProductsQuery
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                Filter = filter,
+                OrderBy = orderBy,
+                SortOrder = sortOrder
+            };
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
+
+
     }
 }
