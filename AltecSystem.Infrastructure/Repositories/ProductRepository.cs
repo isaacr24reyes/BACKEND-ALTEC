@@ -21,10 +21,9 @@ public class ProductRepository : IProductRepository
     }
     public async Task<IEnumerable<Product>> GetActiveProductsAsync()
     {
-        // Devuelve los productos activos sin aplicar filtros o paginación
         var products = await _context.Productos
-            .Where(p => p.IsActive == true)  // Filtro para productos activos
-            .ToListAsync();  // Aquí se realiza la carga de los datos de la base de datos
+            .Where(p => p.IsActive == true) 
+            .ToListAsync();
 
         // Asegurarnos de que el campo Foto no sea NULL
         foreach (var product in products)
@@ -34,6 +33,15 @@ public class ProductRepository : IProductRepository
 
         return products;
     }
+    public async Task UpdateAsync(Product product)
+    {
+        _context.Productos.Update(product);
+        await _context.SaveChangesAsync();
+    }
 
+    public async Task<Product?> GetByIdAsync(Guid id)
+    {
+        return await _context.Productos.FindAsync(id);
+    }
 
 }

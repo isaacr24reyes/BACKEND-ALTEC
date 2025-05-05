@@ -54,7 +54,18 @@ namespace AltecSystem.Api.Controllers
             var result = await _mediator.Send(query);
             return Ok(result);
         }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(Guid id, [FromForm] UpdateProductCommand command)
+        {
+            if (id != command.Id)
+                return BadRequest("ID mismatch.");
 
+            var result = await _mediator.Send(command);
+            if (!result)
+                return NotFound("Producto no encontrado.");
+
+            return NoContent();
+        }
 
     }
 }
