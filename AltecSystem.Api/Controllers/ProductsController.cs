@@ -60,11 +60,12 @@ namespace AltecSystem.Api.Controllers
             if (id != command.Id)
                 return BadRequest("ID mismatch.");
 
-            var result = await _mediator.Send(command);
-            if (!result)
+            var updatedProduct = await _mediator.Send(command);
+
+            if (updatedProduct == null)
                 return NotFound("Producto no encontrado.");
 
-            return NoContent();
+            return Ok(updatedProduct);
         }
 
     }
