@@ -65,14 +65,22 @@ namespace AltecSystem.Application.Handlers.Products
 
             if (request.Foto != null)
             {
+                var folderPath = Path.Combine("wwwroot", "uploads");
+
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+
                 var fileName = $"{Guid.NewGuid()}{Path.GetExtension(request.Foto.FileName)}";
-                var savePath = Path.Combine("wwwroot/images", fileName);
+                var savePath = Path.Combine(folderPath, fileName);
 
                 using var stream = new FileStream(savePath, FileMode.Create);
                 await request.Foto.CopyToAsync(stream);
 
-                existingProduct.Foto = $"/images/{fileName}";
+                existingProduct.Foto = $"/uploads/{fileName}";
             }
+
 
             await _productRepository.UpdateAsync(existingProduct);
             return existingProduct;
