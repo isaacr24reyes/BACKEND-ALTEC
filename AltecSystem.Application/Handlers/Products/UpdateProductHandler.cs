@@ -7,6 +7,7 @@ using System.Globalization;
 namespace AltecSystem.Application.Handlers.Products
 {
     public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, Product> 
+    
     {
         private readonly IProductRepository _productRepository;
 
