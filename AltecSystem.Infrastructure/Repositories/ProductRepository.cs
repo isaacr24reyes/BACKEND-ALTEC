@@ -24,8 +24,7 @@ public class ProductRepository : IProductRepository
         var products = await _context.Productos
             .Where(p => p.IsActive == true) 
             .ToListAsync();
-
-        // Asegurarnos de que el campo Foto no sea NULL
+        
         foreach (var product in products)
         {
             product.Foto = product.Foto ?? "NOT-IMAGE";

@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddSingleton<CloudinaryService>();
 
 // ✅ Registrar MediatR buscando handlers desde el ensamblado de Application
 builder.Services.AddMediatR(cfg =>

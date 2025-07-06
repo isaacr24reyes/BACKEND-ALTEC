@@ -10,39 +10,24 @@ namespace AltecSystem.Application.Handlers.Products
     public class CreateProductHandler : IRequestHandler<CreateProductCommand, Guid>
     {
         private readonly IProductRepository _productRepository;
-        private readonly IHostEnvironment _env;
+        private readonly CloudinaryService _cloudinaryService;
 
-        public CreateProductHandler(IProductRepository productRepository, IHostEnvironment env)
+        public CreateProductHandler(IProductRepository productRepository, CloudinaryService cloudinaryService)
         {
             _productRepository = productRepository;
-            _env = env;
+            _cloudinaryService = cloudinaryService;
         }
 
         public async Task<Guid> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
+            string fotoUrl = "NOT-IMAGE";
 
-            string fotoUrl = null;
-            if (request.Foto != null)
+            if (request.Foto != null && request.Foto.Length > 0)
             {
-                // Generar un nombre único para la imagen
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(request.Foto.FileName);
-                var filePath = Path.Combine(_env.ContentRootPath, "wwwroot", "uploads", fileName); // Uso ContentRootPath
-                Console.WriteLine("Ruta de la imagen: " + fotoUrl);  // Aquí se imprimirá el valor de fotoUrl
-
-                // Guardar la imagen en la carpeta wwwroot/uploads
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await request.Foto.CopyToAsync(stream);
-                }
-
-                // Asignar la ruta de la imagen
-                fotoUrl = "/uploads/" + fileName;  // Ruta relativa
+                fotoUrl = await _cloudinaryService.UploadImageAsync(request.Foto, "imagenes-ALTEC");
             }
 
-            // Obtener la zona horaria de Ecuador (UTC-5)
             TimeZoneInfo ecuadorTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SA Pacific Standard Time");
-
-            // Convertir la hora UTC a la hora de Ecuador
             DateTimeOffset fechaEcuador = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, ecuadorTimeZone);
 
             var product = new Product
@@ -55,10 +40,10 @@ namespace AltecSystem.Application.Handlers.Products
                 PrecioMayorista = request.PrecioMayorista,
                 PrecioImportacion = request.PrecioImportacion,
                 Descripcion = request.Descripcion,
-                Foto = fotoUrl ?? "NOT-IMAGE",
+                Foto = fotoUrl,
                 IsActive = true,
-                CreatedAt = fechaEcuador,  // Asignar la fecha con la zona horaria de Ecuador
-                UpdatedAt = fechaEcuador,  // Asignar la fecha con la zona horaria de Ecuador
+                CreatedAt = fechaEcuador,
+                UpdatedAt = fechaEcuador,
                 CreatedBy = request.CreatedBy,
                 UpdatedBy = request.CreatedBy
             };
@@ -67,4 +52,5 @@ namespace AltecSystem.Application.Handlers.Products
             return product.Id;
         }
     }
+
 }
