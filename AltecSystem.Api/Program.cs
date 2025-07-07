@@ -52,16 +52,13 @@ var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 builder.WebHost.UseUrls($"http://*:{port}");
 var app = builder.Build();
 
-// ✅ Usar CORS
 app.UseCors("AllowAngularApp");
 
-if (app.Environment.IsDevelopment())
-{
+
     app.UseSwagger();
     app.UseSwaggerUI(c =>
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "ALTEC-SYSTEM API v1")
     );
-}
 app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseAuthorization();
