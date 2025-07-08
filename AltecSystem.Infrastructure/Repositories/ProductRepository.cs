@@ -38,7 +38,7 @@ public class ProductRepository : IProductRepository
         catch (SqlException ex)
         {
             Console.WriteLine("❌ SQL ERROR: " + ex.Message);
-            throw; // Re-lanza para que el sistema muestre el error completo también en Swagger
+            throw;
         }
         catch (Exception ex)
         {

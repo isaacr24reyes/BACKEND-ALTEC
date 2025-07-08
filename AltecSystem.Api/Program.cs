@@ -18,15 +18,17 @@ builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()); // Ensamblado de API
     cfg.RegisterServicesFromAssembly(typeof(CreateProductHandler).Assembly); // Ensamblado de Application
 });
-
-// ✅ Configuración de CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp", policy =>
     {
-        policy.WithOrigins("http://localhost:4200", "http://192.168.100.10:4200")
-              .AllowAnyMethod()
-              .AllowAnyHeader();
+        policy.WithOrigins(
+                "http://localhost:4200",
+                "http://192.168.100.10:4200",
+                "https://isaacr24reyes.github.io" // 👈 Agregado GitHub Pages
+            )
+            .AllowAnyMethod()
+            .AllowAnyHeader();
     });
 });
 
