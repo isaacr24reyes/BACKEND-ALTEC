@@ -3,7 +3,7 @@ using MediatR;
 using AltecSystem.Domain.Entities;
 using AltecSystem.Application.Interfaces;
 using Microsoft.Extensions.Hosting;
-
+using System.Globalization;
 
 namespace AltecSystem.Application.Handlers.Products
 {
@@ -26,6 +26,10 @@ namespace AltecSystem.Application.Handlers.Products
             {
                 fotoUrl = await _cloudinaryService.UploadImageAsync(request.Foto, "imagenes-ALTEC");
             }
+            
+            decimal pvp = decimal.Parse(request.Pvp.Replace(",", "."), CultureInfo.InvariantCulture);
+            decimal precioMayorista = decimal.Parse(request.PrecioMayorista.Replace(",", "."), CultureInfo.InvariantCulture);
+            decimal precioImportacion = decimal.Parse(request.PrecioImportacion.Replace(",", "."), CultureInfo.InvariantCulture);
 
             TimeZoneInfo ecuadorTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SA Pacific Standard Time");
             DateTimeOffset fechaEcuador = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, ecuadorTimeZone);
@@ -36,9 +40,9 @@ namespace AltecSystem.Application.Handlers.Products
                 Categoria = request.Categoria,
                 Codigo = request.Codigo,
                 Stock = request.Stock,
-                Pvp = request.Pvp,
-                PrecioMayorista = request.PrecioMayorista,
-                PrecioImportacion = request.PrecioImportacion,
+                Pvp = pvp,
+                PrecioMayorista = precioMayorista,
+                PrecioImportacion = precioImportacion,
                 Descripcion = request.Descripcion,
                 Foto = fotoUrl,
                 IsActive = true,
@@ -52,5 +56,4 @@ namespace AltecSystem.Application.Handlers.Products
             return product.Id;
         }
     }
-
 }

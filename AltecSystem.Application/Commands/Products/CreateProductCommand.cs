@@ -14,14 +14,16 @@ namespace AltecSystem.Application.Commands.Products
 
         [Required] 
         public int Stock { get; set; }
+        
         [Required]
-        public decimal Pvp { get; set; }
+        public string Pvp { get; set; }
 
         [Required]
-        public decimal PrecioMayorista { get; set; }
+        public string PrecioMayorista { get; set; }
 
         [Required]
-        public decimal PrecioImportacion { get; set; }
+        public string PrecioImportacion { get; set; }
+
 
         [Required]
         public string Descripcion { get; set; }
