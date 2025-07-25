@@ -54,6 +54,33 @@ namespace AltecSystem.Api.Controllers
             var result = await _mediator.Send(query);
             return Ok(result);
         }
+        
+        [HttpGet("client")]
+        public async Task<IActionResult> GetActiveProductsForClient(
+            int pageNumber, 
+            int pageSize, 
+            string? filter, 
+            string? orderBy, 
+            string? sortOrder)
+        {
+            var query = new GetActiveProductsClientQuery
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                Filter = filter,
+                OrderBy = orderBy,
+                SortOrder = sortOrder
+            };
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, [FromForm] UpdateProductCommand command)
         {

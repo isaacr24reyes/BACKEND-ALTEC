@@ -2,18 +2,20 @@ using AltecSystem.Application.Interfaces;
 using AltecSystem.Domain.Entities;
 using MediatR;
 using System.Linq.Dynamic.Core;
+using AltecSystem.Application.DTOs.Product;
 using Microsoft.EntityFrameworkCore;
 
-public class GetActiveProductsHandler : IRequestHandler<GetActiveProductsQuery, PaginatedResult<Product>>
+public class GetActiveProductsClientHandler : IRequestHandler<GetActiveProductsClientQuery, PaginatedResult<ProductClientDto>>
 {
     private readonly IProductRepository _productRepository;
 
-    public GetActiveProductsHandler(IProductRepository productRepository)
+    public GetActiveProductsClientHandler(IProductRepository productRepository)
     {
         _productRepository = productRepository;
     }
 
-    public async Task<PaginatedResult<Product>> Handle(GetActiveProductsQuery request, CancellationToken cancellationToken)
+    public async Task<PaginatedResult<ProductClientDto>> Handle(GetActiveProductsClientQuery request, CancellationToken cancellationToken)
+
     {
         var products = await _productRepository.GetActiveProductsAsync();
         var query = products.AsQueryable();
@@ -38,13 +40,19 @@ public class GetActiveProductsHandler : IRequestHandler<GetActiveProductsQuery, 
         // Total antes de paginar
         var total = query.Count();
 
-        // Paginación
         var items = query
             .Skip((request.PageNumber - 1) * request.PageSize)
             .Take(request.PageSize)
-            .ToList();  // 'ToList' convierte a una lista en memoria, después de aplicar paginación
+            .Select(p => new ProductClientDto
+            {
+                Id = p.Id,
+                Descripcion = p.Descripcion,
+                Pvp = p.Pvp,
+                Foto = p.Foto ?? "NOT-IMAGE"
+            })
+            .ToList();
 
-        return new PaginatedResult<Product>(items, total);
+        return new PaginatedResult<ProductClientDto>(items, total);
     }
 
 }
