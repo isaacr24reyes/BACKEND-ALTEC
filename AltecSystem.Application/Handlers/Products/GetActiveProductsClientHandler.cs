@@ -47,9 +47,12 @@ public class GetActiveProductsClientHandler : IRequestHandler<GetActiveProductsC
             {
                 Id = p.Id,
                 Descripcion = p.Descripcion,
+                Codigo = p.Codigo,
+                Categoria = p.Categoria, // Si existe en la entidad
                 Pvp = p.Pvp,
                 Foto = p.Foto ?? "NOT-IMAGE"
             })
+
             .ToList();
 
         return new PaginatedResult<ProductClientDto>(items, total);
