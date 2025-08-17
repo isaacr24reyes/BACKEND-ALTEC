@@ -1,4 +1,5 @@
 using AltecSystem.Application.Commands.User;
+using AltecSystem.Application.DTOs.Auth;
 using AltecSystem.Application.DTOs.User;
 using AltecSystem.Application.Interfaces;
 using AltecSystem.Application.Queries.User;
@@ -37,6 +38,32 @@ public class AuthController : ControllerBase
         if (result == null)
             return NotFound("Usuario no encontrado.");
 
+        return Ok(result);
+    }
+    /// <summary>
+    /// Busca usuarios por coincidencia parcial en Username o Name (case-insensitive).
+    /// Ej: q=is -> Isaac, isabella, cris, etc.
+    /// Soporta paginación opcional.
+    /// </summary>
+    [HttpGet("by-name")]
+    public async Task<ActionResult<IEnumerable<UserDetailsDto>>> GetAllByName(
+        [FromQuery] string q,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 50)
+    {
+        if (string.IsNullOrWhiteSpace(q))
+            return BadRequest("Debes enviar el parámetro 'q' con el término de búsqueda.");
+
+        if (page <= 0 || pageSize <= 0) 
+            return BadRequest("Parámetros de paginación inválidos.");
+
+        var result = await _mediator.Send(new GetUsersByNameQuery(q, page, pageSize));
+        return Ok(result);
+    }
+    [HttpPost("add-points")]
+    public async Task<ActionResult<UserDetailsDto>> AddPoints([FromBody] AddPointsRequestDto request)
+    {
+        var result = await _mediator.Send(new AddPointsCommand(request.Name, request.Points));
         return Ok(result);
     }
     

@@ -19,5 +19,35 @@ namespace AltecSystem.Infrastructure.Repositories
         {
             return await _context.Login.FirstOrDefaultAsync(u => u.Username == username);
         }
+        public async Task<IReadOnlyList<User>> SearchByNameAsync(
+            string search,
+            int skip,
+            int take,
+            CancellationToken ct = default)
+        {
+            var term = search.Trim().ToLower();
+
+            return await _context.Login
+                .AsNoTracking()
+                .Where(u =>
+                    u.Username.ToLower().Contains(term) ||
+                    u.Name.ToLower().Contains(term))
+                .OrderBy(u => u.Name)
+                .Skip(skip)
+                .Take(take)
+                .ToListAsync(ct);
+        }
+        public async Task<User?> GetByNameAsync(string name, CancellationToken ct = default)
+        {
+            return await _context.Login
+                .FirstOrDefaultAsync(u => u.Name == name, ct);
+        }
+
+        public async Task UpdateAsync(User user, CancellationToken ct = default)
+        {
+            _context.Login.Update(user);
+            await _context.SaveChangesAsync(ct);
+        }
+
     }
 }
