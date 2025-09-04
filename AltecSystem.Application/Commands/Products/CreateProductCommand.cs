@@ -12,7 +12,7 @@ namespace AltecSystem.Application.Commands.Products
         [Required] 
         public string Codigo { get; set; }
         [Required] 
-        public bool IsImported { get; set; }
+        public bool IsImport { get; set; }
 
 
         [Required] 

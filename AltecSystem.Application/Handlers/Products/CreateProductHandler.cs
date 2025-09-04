@@ -39,7 +39,7 @@ namespace AltecSystem.Application.Handlers.Products
                 Id = Guid.NewGuid(),
                 Categoria = request.Categoria,
                 Codigo = request.Codigo,
-                IsImported = request.IsImported,
+                IsImport = request.IsImport,
                 Stock = request.Stock,
                 Pvp = pvp,
                 PrecioMayorista = precioMayorista,
