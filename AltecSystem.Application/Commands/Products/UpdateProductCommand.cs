@@ -10,6 +10,7 @@ namespace AltecSystem.Application.Commands.Products
 
         public string? Categoria { get; set; }
         public string? Codigo { get; set; }
+        public bool? IsImport { get; set; }
         public int? Stock { get; set; }
         public string? Pvp { get; set; }
         public string? PrecioMayorista { get; set; }

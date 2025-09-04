@@ -28,6 +28,8 @@ namespace AltecSystem.Application.Handlers.Products
 
             if (request.Codigo != null)
                 existingProduct.Codigo = request.Codigo;
+            if (request.IsImport.HasValue)
+                existingProduct.IsImport = request.IsImport.Value;
 
             if (request.Stock.HasValue)
                 existingProduct.Stock = request.Stock.Value;
@@ -56,7 +58,6 @@ namespace AltecSystem.Application.Handlers.Products
             if (request.UpdatedBy != null)
                 existingProduct.UpdatedBy = request.UpdatedBy;
 
-            // ✅ Subida a Cloudinary
             if (request.Foto != null)
             {
                 var cloudUrl = await _cloudinaryService.UploadImageAsync(request.Foto, "imagenes-ALTEC");
