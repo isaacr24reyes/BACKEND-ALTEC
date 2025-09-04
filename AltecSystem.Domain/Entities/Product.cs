@@ -7,6 +7,7 @@ public class Product
     public Guid Id { get; set; }
     public string Categoria { get; set; }
     public string Codigo { get; set; }
+    public bool IsImported { get; set; }
     public int Stock { get; set; }
     public decimal Pvp { get; set; }
     public decimal PrecioMayorista { get; set; }
