@@ -25,7 +25,8 @@ builder.Services.AddCors(options =>
         policy.WithOrigins(
                 "http://localhost:4200",
                 "http://192.168.100.10:4200",
-                "https://isaacr24reyes.github.io" // 👈 Agregado GitHub Pages
+                "https://isaacr24reyes.github.io",
+                "https://altecmec.com" // ✅ Aquí agregamos tu dominio real
             )
             .AllowAnyMethod()
             .AllowAnyHeader();
