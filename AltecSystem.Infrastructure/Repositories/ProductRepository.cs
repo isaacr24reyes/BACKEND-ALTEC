@@ -57,5 +57,11 @@ public class ProductRepository : IProductRepository
     {
         return await _context.Productos.FindAsync(id);
     }
+    public async Task<List<Product>> GetImportedProductsAsync()
+    {
+        return await _context.Productos
+            .Where(p => p.IsImport == true)
+            .ToListAsync();
+    }
 
 }

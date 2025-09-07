@@ -11,12 +11,10 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<CloudinaryService>();
-
-// ✅ Registrar MediatR buscando handlers desde el ensamblado de Application
 builder.Services.AddMediatR(cfg =>
 {
-    cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()); // Ensamblado de API
-    cfg.RegisterServicesFromAssembly(typeof(CreateProductHandler).Assembly); // Ensamblado de Application
+    cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+    cfg.RegisterServicesFromAssembly(typeof(CreateProductHandler).Assembly);
 });
 builder.Services.AddCors(options =>
 {
@@ -26,7 +24,7 @@ builder.Services.AddCors(options =>
                 "http://localhost:4200",
                 "http://192.168.100.10:4200",
                 "https://isaacr24reyes.github.io",
-                "https://altecmec.com" // ✅ Aquí agregamos tu dominio real
+                "https://altecmec.com"
             )
             .AllowAnyMethod()
             .AllowAnyHeader();

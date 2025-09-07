@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using AltecSystem.Application.Commands.Products;
+using AltecSystem.Application.Queries.Products;
 using MediatR;
 
 namespace AltecSystem.Api.Controllers
@@ -15,7 +16,6 @@ namespace AltecSystem.Api.Controllers
             _mediator = mediator;
         }
 
-        // Endpoint para crear producto
         [HttpPost]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> CreateProduct([FromForm] CreateProductCommand command)
@@ -94,6 +94,11 @@ namespace AltecSystem.Api.Controllers
 
             return Ok(updatedProduct);
         }
-
+        [HttpGet("imported")]
+        public async Task<IActionResult> GetImportedProducts()
+        {
+            var result = await _mediator.Send(new GetImportedProductsQuery());
+            return Ok(result);
+        }
     }
 }

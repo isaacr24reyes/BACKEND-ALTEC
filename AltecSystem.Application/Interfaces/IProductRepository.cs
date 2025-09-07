@@ -8,4 +8,6 @@ public interface IProductRepository
     Task<IEnumerable<Product>> GetActiveProductsAsync();
     Task UpdateAsync(Product product);
     Task<Product?> GetByIdAsync(Guid id);
+    Task<List<Product>> GetImportedProductsAsync();
+
 }
