@@ -26,7 +26,8 @@ public class GetUserByUsernameQueryHandler : IRequestHandler<GetUserByUsernameQu
             Username = user.Username,
             Name = user.Name,
             Role = user.Role,
-            Altec_Points = user.Altec_Points ?? 0  
+            Altec_Points = user.Altec_Points ?? 0m
         };
+
     }
 }
