@@ -72,5 +72,16 @@ public class AuthController : ControllerBase
         var result = await _mediator.Send(new GetAllUsersCommand(), ct);
         return Ok(result);
     }
+    // 🔹 Crear nuevo usuario
+    [HttpPost("create")]
+    public async Task<IActionResult> CreateUser([FromBody] CreateUserCommand command, CancellationToken ct)
+    {
+        var success = await _mediator.Send(command, ct);
+
+        if (!success)
+            return BadRequest(new { message = "No se pudo crear el usuario" });
+
+        return Ok(new { message = "✅ Usuario creado con éxito" });
+    }
     
 }

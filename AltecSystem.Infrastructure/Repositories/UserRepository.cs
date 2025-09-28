@@ -55,5 +55,12 @@ namespace AltecSystem.Infrastructure.Repositories
                 .OrderBy(u => u.Name)
                 .ToListAsync(ct);
         }
+        public async Task AddAsync(User user, CancellationToken ct = default)
+        {
+            await _context.Login.AddAsync(user, ct);
+            await _context.SaveChangesAsync(ct);
+        }
+
+
     }
 }

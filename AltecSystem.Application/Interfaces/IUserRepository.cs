@@ -14,5 +14,7 @@ namespace AltecSystem.Application.Interfaces
         Task<User?> GetByNameAsync(string name, CancellationToken ct = default);
         Task UpdateAsync(User user, CancellationToken ct = default);
         Task<IReadOnlyList<User>> GetAllAsync(CancellationToken ct = default);
+        Task AddAsync(User user, CancellationToken cancellationToken);
+
     }
 }

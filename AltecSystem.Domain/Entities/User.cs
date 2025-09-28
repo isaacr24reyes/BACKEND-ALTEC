@@ -8,6 +8,8 @@ namespace AltecSystem.Domain.Entities
         public string Role { get; set; } = string.Empty;
         public Guid Id { get; set; }
         public decimal? Altec_Points { get; set; }
+        public string? Telefono { get; set; } 
+
 
     }
 }

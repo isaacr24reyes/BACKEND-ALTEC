@@ -6,5 +6,6 @@ public class UserDetailsDto
     public string Name { get; set; }
     public string Role { get; set; }
     public decimal? Altec_Points { get; set; }
+    public string? Telefono { get; set; } 
 
 }

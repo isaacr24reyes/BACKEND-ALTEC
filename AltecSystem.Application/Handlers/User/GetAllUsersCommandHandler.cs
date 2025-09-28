@@ -17,7 +17,8 @@ namespace AltecSystem.Application.Handlers.User
                 Username = u.Username,
                 Name = u.Name,
                 Role = u.Role,
-                Altec_Points = u.Altec_Points
+                Altec_Points = u.Altec_Points,
+                Telefono = u.Telefono
             }).ToList();
         }
     }
