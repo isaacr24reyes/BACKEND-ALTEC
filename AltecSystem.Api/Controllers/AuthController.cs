@@ -63,9 +63,10 @@ public class AuthController : ControllerBase
     [HttpPost("add-points")]
     public async Task<ActionResult<UserDetailsDto>> AddPoints([FromBody] AddPointsRequestDto request)
     {
-        var result = await _mediator.Send(new AddPointsCommand(request.Name, request.Points));
+        var result = await _mediator.Send(new AddPointsCommand(request.Username, request.Points));
         return Ok(result);
     }
+
     [HttpGet("getAll")]
     public async Task<IActionResult> GetAllUsers(CancellationToken ct)
     {
@@ -78,6 +79,11 @@ public class AuthController : ControllerBase
         var result = await _mediator.Send(command, ct);
         return Ok(result); // 🔹 Devuelve el usuario creado
     }
-
+    [HttpPost("reset-and-add-balance")]
+    public async Task<ActionResult<UserDetailsDto>> ResetAndAddBalance([FromBody] ResetBalanceRequestDto request)
+    {
+        var result = await _mediator.Send(new ResetAndAddBalanceCommand(request.Username, request.NewBalance));
+        return Ok(result);
+    }
     
 }

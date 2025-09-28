@@ -5,22 +5,26 @@ using MediatR;
 
 namespace AltecSystem.Application.Handlers.User
 {
-    public class AddPointsHandler : IRequestHandler<AddPointsCommand, UserDetailsDto>
+    public class ResetAndAddBalanceHandler : IRequestHandler<ResetAndAddBalanceCommand, UserDetailsDto>
     {
         private readonly IUserRepository _userRepository;
 
-        public AddPointsHandler(IUserRepository userRepository)
+        public ResetAndAddBalanceHandler(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }
 
-        public async Task<UserDetailsDto> Handle(AddPointsCommand request, CancellationToken cancellationToken)
+        public async Task<UserDetailsDto> Handle(ResetAndAddBalanceCommand request, CancellationToken cancellationToken)
         {
             var user = await _userRepository.GetByUsernameAsync(request.Username);
             if (user == null)
                 throw new KeyNotFoundException($"Usuario con username '{request.Username}' no encontrado.");
 
-            user.Altec_Points = (user.Altec_Points ?? 0) + request.Points;
+            // 1️⃣ Resetear balance
+            user.Altec_Points = 0;
+
+            // 2️⃣ Acreditar nuevo balance
+            user.Altec_Points += request.NewBalance;
 
             await _userRepository.UpdateAsync(user, cancellationToken);
 

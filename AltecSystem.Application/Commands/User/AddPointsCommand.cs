@@ -5,12 +5,12 @@ namespace AltecSystem.Application.Commands.User
 {
     public class AddPointsCommand : IRequest<UserDetailsDto>
     {
-        public string Name { get; }
+        public string Username { get; }
         public decimal Points { get; }
 
-        public AddPointsCommand(string name, decimal points)
+        public AddPointsCommand(string username, decimal points)
         {
-            Name = name;
+            Username = username;
             Points = points;
         }
     }
