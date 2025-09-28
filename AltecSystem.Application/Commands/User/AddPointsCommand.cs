@@ -8,7 +8,7 @@ namespace AltecSystem.Application.Commands.User
         public string Name { get; }
         public decimal Points { get; }
 
-        public AddPointsCommand(string name, int points)
+        public AddPointsCommand(string name, decimal points)
         {
             Name = name;
             Points = points;
