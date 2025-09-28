@@ -6,7 +6,7 @@ namespace AltecSystem.Application.Commands.User
     public class AddPointsCommand : IRequest<UserDetailsDto>
     {
         public string Name { get; }
-        public int Points { get; }
+        public decimal Points { get; }
 
         public AddPointsCommand(string name, int points)
         {

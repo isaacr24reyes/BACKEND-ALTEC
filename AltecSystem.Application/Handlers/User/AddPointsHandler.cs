@@ -20,7 +20,7 @@ namespace AltecSystem.Application.Handlers.User
             if (user == null)
                 throw new KeyNotFoundException($"Usuario con nombre '{request.Name}' no encontrado.");
 
-            user.Altec_Points = (user.Altec_Points ?? 0) + request.Points;
+            user.Altec_Points = (user.Altec_Points ?? 0) + request.Points; // ahora maneja decimales
 
             await _userRepository.UpdateAsync(user, cancellationToken);
 
@@ -32,5 +32,6 @@ namespace AltecSystem.Application.Handlers.User
                 Altec_Points = user.Altec_Points ?? 0
             };
         }
+
     }
 }
