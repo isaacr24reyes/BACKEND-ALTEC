@@ -13,6 +13,6 @@ namespace AltecSystem.Application.Interfaces
             CancellationToken ct = default);
         Task<User?> GetByNameAsync(string name, CancellationToken ct = default);
         Task UpdateAsync(User user, CancellationToken ct = default);
-
+        Task<IReadOnlyList<User>> GetAllAsync(CancellationToken ct = default);
     }
 }

@@ -48,6 +48,12 @@ namespace AltecSystem.Infrastructure.Repositories
             _context.Login.Update(user);
             await _context.SaveChangesAsync(ct);
         }
-
+        public async Task<IReadOnlyList<User>> GetAllAsync(CancellationToken ct = default)
+        {
+            return await _context.Login
+                .AsNoTracking()
+                .OrderBy(u => u.Name)
+                .ToListAsync(ct);
+        }
     }
 }

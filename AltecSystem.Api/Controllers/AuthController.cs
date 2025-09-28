@@ -66,5 +66,11 @@ public class AuthController : ControllerBase
         var result = await _mediator.Send(new AddPointsCommand(request.Name, request.Points));
         return Ok(result);
     }
+    [HttpGet("getAll")]
+    public async Task<IActionResult> GetAllUsers(CancellationToken ct)
+    {
+        var result = await _mediator.Send(new GetAllUsersCommand(), ct);
+        return Ok(result);
+    }
     
 }
