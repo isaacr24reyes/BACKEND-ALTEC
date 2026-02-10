@@ -40,6 +40,7 @@ builder.Services.AddDbContext<AltecSystemDbContext>(options =>
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ISalesRepository, SalesRepository>();
 
 // ✅ Configuración de controladores y Swagger
 builder.Services.AddControllers();
