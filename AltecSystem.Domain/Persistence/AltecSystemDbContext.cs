@@ -10,6 +10,7 @@ namespace AltecSystem.Domain.Persistence
         public DbSet<User> Login { get; set; }
         public DbSet<Product> Productos { get; set; }
         public DbSet<Sale> Sales { get; set; } // Agregado para incluir la entidad Sale
+        public DbSet<QuotationDetail> QuotationDetails { get; set; } // Agregado para incluir la entidad QuotationDetail
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

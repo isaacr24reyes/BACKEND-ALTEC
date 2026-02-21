@@ -4,7 +4,6 @@ using AltecSystem.Application.Interfaces;
 using AltecSystem.Domain.Persistence;
 using AltecSystem.Infrastructure.Services;
 using AltecSystem.Infrastructure.Repositories;
-using MediatR;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -40,6 +39,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ISalesRepository, SalesRepository>();
+builder.Services.AddTransient<IQuotationRepository, QuotationRepository>();
 
 // ✅ Configuración de controladores y Swagger
 builder.Services.AddControllers();
