@@ -33,6 +33,11 @@ namespace AltecSystem.Domain.Persistence
             modelBuilder.Entity<Sale>()
                 .Property(s => s.Profit)
                 .HasColumnType("decimal(18, 2)");
+
+            // Eliminamos cualquier índice único en InvoiceNumber
+            modelBuilder.Entity<Sale>()
+                .HasIndex(s => s.InvoiceNumber)
+                .IsUnique(false);
         }
     }
 }
