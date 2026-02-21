@@ -6,6 +6,7 @@ using AltecSystem.Infrastructure.Services;
 using AltecSystem.Infrastructure.Repositories;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
+using AltecSystem.Application.Queries.Sales;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<CloudinaryService>();
@@ -13,6 +14,7 @@ builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
     cfg.RegisterServicesFromAssembly(typeof(CreateProductHandler).Assembly);
+    cfg.RegisterServicesFromAssembly(typeof(GetSalesGroupedByInvoiceNumberQuery).Assembly);
 });
 builder.Services.AddCors(options =>
 {
