@@ -1,7 +1,5 @@
-using System.Threading;
-using System.Threading.Tasks;
+using System;
 using AltecSystem.Application.Commands.Sales;
-using AltecSystem.Application.DTOs.Sales;
 using AltecSystem.Application.Interfaces;
 using AltecSystem.Domain.Entities;
 using MediatR;
@@ -19,12 +17,17 @@ namespace AltecSystem.Application.Handlers.Sales
         public async Task<int> Handle(CreateSaleCommand request, CancellationToken cancellationToken)
         {
             var dto = request.SaleDto;
+            
+            if (dto.EmployeeId.HasValue && dto.EmployeeId == Guid.Empty)
+            {
+                throw new ArgumentException("EmployeeId must be a valid GUID or null.");
+            }
+
             var sale = new Sale
             {
                 InvoiceNumber = dto.InvoiceNumber,
-                CustomerID = dto.CustomerID,
-                EmployeeID = dto.EmployeeID,
-                ProductID = dto.ProductID,
+                EmployeeID = dto.EmployeeId, // Validado como GUID o null
+                ProductID = dto.ProductId, // Ya es GUID
                 SaleDate = dto.SaleDate,
                 Quantity = dto.Quantity,
                 UnitPrice = dto.UnitPrice,
@@ -32,7 +35,8 @@ namespace AltecSystem.Application.Handlers.Sales
                 TotalAmount = dto.TotalAmount,
                 PaymentMethod = dto.PaymentMethod,
                 Status = dto.Status,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                Profit = dto.Profit // Agregado para incluir el campo Profit
             };
             var result = await _salesRepository.AddSaleAsync(sale);
             return result.Id;

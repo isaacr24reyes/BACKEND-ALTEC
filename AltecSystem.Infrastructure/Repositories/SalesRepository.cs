@@ -1,24 +1,25 @@
 using System.Threading.Tasks;
 using AltecSystem.Application.Interfaces;
 using AltecSystem.Domain.Entities;
+using AltecSystem.Infrastructure.Persistence; // Asegúrate de tener la referencia correcta
 
 namespace AltecSystem.Infrastructure.Repositories
 {
     public class SalesRepository : ISalesRepository
     {
-        // Aquí deberías inyectar tu DbContext o similar
-        public SalesRepository(/* TuDbContext context */)
+        private readonly AltecSystemDbContext _context;
+
+        public SalesRepository(AltecSystemDbContext context)
         {
-            // _context = context;
+            _context = context;
         }
 
         public async Task<Sale> AddSaleAsync(Sale sale)
         {
-            // Implementación real con Entity Framework o Dapper
-            // _context.Sales.Add(sale);
-            // await _context.SaveChangesAsync();
-            // return sale;
-            throw new NotImplementedException();
+            // Eliminado el cálculo de Profit, ahora solo se guarda el valor proporcionado
+            _context.Sales.Add(sale);
+            await _context.SaveChangesAsync();
+            return sale;
         }
     }
 }

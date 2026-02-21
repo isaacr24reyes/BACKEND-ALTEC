@@ -6,9 +6,8 @@ namespace AltecSystem.Domain.Entities
     {
         public int Id { get; set; }
         public string InvoiceNumber { get; set; }
-        public int CustomerID { get; set; }
-        public int? EmployeeID { get; set; }
-        public int ProductID { get; set; }
+        public Guid? EmployeeID { get; set; } // Cambiado a GUID
+        public Guid ProductID { get; set; } // Ya es GUID
         public DateTime? SaleDate { get; set; }
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }
@@ -17,5 +16,6 @@ namespace AltecSystem.Domain.Entities
         public string PaymentMethod { get; set; }
         public string? Status { get; set; }
         public DateTime? CreatedAt { get; set; }
+        public decimal? Profit { get; set; } // Agregado para incluir el campo Profit
     }
 }

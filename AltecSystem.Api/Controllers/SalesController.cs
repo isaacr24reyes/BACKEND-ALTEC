@@ -1,4 +1,3 @@
- using System.Threading.Tasks;
 using AltecSystem.Application.Commands.Sales;
 using AltecSystem.Application.DTOs.Sales;
 using MediatR;
@@ -19,11 +18,22 @@ namespace AltecSystem.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateSale([FromBody] CreateSaleDto saleDto)
         {
-            if (saleDto == null)
-                return BadRequest();
-            var command = new CreateSaleCommand(saleDto);
-            var saleId = await _mediator.Send(command);
-            return CreatedAtAction(nameof(CreateSale), new { id = saleId }, saleId);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (saleDto.EmployeeId.HasValue && saleDto.EmployeeId == Guid.Empty)
+                return BadRequest(new { error = "The EmployeeId must be a valid GUID or null." });
+
+            try
+            {
+                var command = new CreateSaleCommand(saleDto);
+                var saleId = await _mediator.Send(command);
+                return CreatedAtAction(nameof(CreateSale), new { id = saleId }, saleId);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message });
+            }
         }
     }
 }
