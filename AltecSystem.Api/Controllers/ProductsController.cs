@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using AltecSystem.Application.Commands.Products;
 using AltecSystem.Application.Queries.Products;
+using AltecSystem.Application.DTOs.Products;
 using MediatR;
 
 namespace AltecSystem.Api.Controllers
@@ -89,8 +90,6 @@ namespace AltecSystem.Api.Controllers
 
             var updatedProduct = await _mediator.Send(command);
 
-            if (updatedProduct == null)
-                return NotFound("Producto no encontrado.");
 
             return Ok(updatedProduct);
         }
@@ -99,6 +98,32 @@ namespace AltecSystem.Api.Controllers
         {
             var result = await _mediator.Send(new GetImportedProductsQuery());
             return Ok(result);
+        }
+
+        [HttpPatch("{productId}/reducir-stock")]
+        public async Task<IActionResult> ReducirStock(Guid productId, [FromBody] ReducirStockRequest request)
+        {
+            if (productId == Guid.Empty)
+                return BadRequest(new { error = "El productId debe ser un GUID válido." });
+
+            if (request.Quantity <= 0)
+                return BadRequest(new { error = "La cantidad debe ser mayor a 0." });
+
+            try
+            {
+                var command = new ReducirStockCommand(productId, request.Quantity);
+                var response = await _mediator.Send(command);
+
+                return Ok(response);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            catch
+            {
+                return StatusCode(500, new { error = "Ocurrió un error inesperado." });
+            }
         }
     }
 }

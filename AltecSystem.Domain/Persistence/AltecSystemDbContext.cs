@@ -1,7 +1,7 @@
 using AltecSystem.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace AltecSystem.Infrastructure.Persistence
+namespace AltecSystem.Domain.Persistence
 {
     public class AltecSystemDbContext : DbContext
     {
@@ -28,7 +28,10 @@ namespace AltecSystem.Infrastructure.Persistence
                 .HasColumnName("ProductID")
                 .IsRequired();
 
-            // Otras configuraciones si las necesitas
+            // Configuración adicional para evitar errores
+            modelBuilder.Entity<Sale>()
+                .Property(s => s.Profit)
+                .HasColumnType("decimal(18, 2)");
         }
     }
 }

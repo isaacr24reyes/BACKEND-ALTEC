@@ -1,13 +1,12 @@
-using AltecSystem.Application.Commands.Products;
+using System.Reflection;
 using AltecSystem.Application.Handlers.Products;
 using AltecSystem.Application.Interfaces;
+using AltecSystem.Domain.Persistence;
 using AltecSystem.Infrastructure.Services;
 using AltecSystem.Infrastructure.Repositories;
-using AltecSystem.Infrastructure.Persistence;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<CloudinaryService>();

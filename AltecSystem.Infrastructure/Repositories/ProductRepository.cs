@@ -1,6 +1,6 @@
 using AltecSystem.Application.Interfaces;
 using AltecSystem.Domain.Entities;
-using AltecSystem.Infrastructure.Persistence;
+using AltecSystem.Domain.Persistence;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 

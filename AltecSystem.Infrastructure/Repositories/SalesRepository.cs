@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using AltecSystem.Application.Interfaces;
 using AltecSystem.Domain.Entities;
-using AltecSystem.Infrastructure.Persistence; // Asegúrate de tener la referencia correcta
+using AltecSystem.Domain.Persistence;
 
 namespace AltecSystem.Infrastructure.Repositories
 {
