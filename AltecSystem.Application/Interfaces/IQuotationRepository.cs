@@ -7,5 +7,6 @@ namespace AltecSystem.Application.Interfaces
     public interface IQuotationRepository
     {
         Task GuardarAsync(List<QuotationDetail> quotationDetails);
+        Task<List<QuotationDetail>> ObtenerPorNumeroCotizacionAsync(string quotationNumber);
     }
 }
