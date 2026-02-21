@@ -25,7 +25,7 @@ namespace AltecSystem.Domain.Persistence
                 .HasColumnType("NVARCHAR(4000)"); // Cambiado de varbinary(max) a NVARCHAR(4000) para URL
 
             modelBuilder.Entity<Sale>()
-                .Property(s => s.ProductID)
+                .Property(s => s.ProductId) // Corregido el nombre de la propiedad
                 .HasColumnName("ProductID")
                 .IsRequired();
 

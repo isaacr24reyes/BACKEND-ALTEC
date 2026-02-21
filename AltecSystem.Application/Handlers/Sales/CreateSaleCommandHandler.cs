@@ -26,8 +26,8 @@ namespace AltecSystem.Application.Handlers.Sales
             var sale = new Sale
             {
                 InvoiceNumber = dto.InvoiceNumber,
-                EmployeeID = dto.EmployeeId, // Validado como GUID o null
-                ProductID = dto.ProductId, // Ya es GUID
+                EmployeeId = dto.EmployeeId, // Validado como GUID o null
+                ProductId = dto.ProductId, // Ya es GUID
                 SaleDate = dto.SaleDate,
                 Quantity = dto.Quantity,
                 UnitPrice = dto.UnitPrice,
