@@ -1,9 +1,12 @@
-using AltecSystem.Application.Interfaces;
-using AltecSystem.Domain.Entities;
+namespace AltecSystem.Application.Handlers.Products;
+
+// Corrigiendo el uso de LINQ dinámico y eliminando directivas redundantes
+using AltecSystem.Application.DTOs.Product;
+using AltecSystem.Domain.Entities; // Agregado para resolver el tipo Product
+using AltecSystem.Application.Interfaces; // Reintroduciendo la directiva necesaria para la interfaz
 using MediatR;
 using System.Linq.Dynamic.Core;
-using AltecSystem.Application.DTOs.Product;
-using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 public class GetActiveProductsClientHandler : IRequestHandler<GetActiveProductsClientQuery, PaginatedResult<ProductClientDto>>
 {
@@ -15,17 +18,16 @@ public class GetActiveProductsClientHandler : IRequestHandler<GetActiveProductsC
     }
 
     public async Task<PaginatedResult<ProductClientDto>> Handle(GetActiveProductsClientQuery request, CancellationToken cancellationToken)
-
     {
         var products = await _productRepository.GetActiveProductsAsync();
         var query = products.AsQueryable();
-    
+
         // Filtros
         if (!string.IsNullOrWhiteSpace(request.Filter))
         {
             var filter = request.Filter.ToLower();
             query = query.Where(p =>
-                p.Descripcion.ToLower().Contains(filter) ||  
+                p.Descripcion.ToLower().Contains(filter) ||
                 p.Codigo.ToLower().Contains(filter));
         }
 
@@ -40,19 +42,15 @@ public class GetActiveProductsClientHandler : IRequestHandler<GetActiveProductsC
         // Total antes de paginar
         var total = query.Count();
 
-        var items = query
+
+        // Corrigiendo el uso de orderByExpression y ajustando Select para LINQ dinámico
+        var orderedProducts = query.OrderBy(request.OrderBy + (request.SortOrder?.ToLower() == "desc" ? " descending" : " ascending"));
+
+        var items = orderedProducts
             .Skip((request.PageNumber - 1) * request.PageSize)
             .Take(request.PageSize)
-            .Select(p => new ProductClientDto
-            {
-                Id = p.Id,
-                Descripcion = p.Descripcion,
-                Codigo = p.Codigo,
-                Categoria = p.Categoria, // Si existe en la entidad
-                Pvp = p.Pvp,
-                Foto = p.Foto ?? "NOT-IMAGE"
-            })
-
+            .Select("new(Id, Descripcion, Codigo, Categoria, Pvp, Foto, Stock)")
+            .Cast<ProductClientDto>()
             .ToList();
 
         return new PaginatedResult<ProductClientDto>(items, total);
