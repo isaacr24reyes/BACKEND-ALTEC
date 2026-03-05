@@ -7,7 +7,7 @@ namespace AltecSystem.Application.DTOs.Sales
         public Guid ProductId { get; set; } // Ya es GUID
         public DateTime? SaleDate { get; set; }
         public int Quantity { get; set; }
-        public decimal UnitPrice { get; set; }
+        public decimal UnitPrice { get; set; } // Agregado para incluir el precio unitario
         public decimal? TaxAmount { get; set; }
         public decimal TotalAmount { get; set; }
         public required string PaymentMethod { get; set; }

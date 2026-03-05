@@ -1,4 +1,3 @@
-using System;
 using AltecSystem.Application.Commands.Sales;
 using AltecSystem.Application.Interfaces;
 using AltecSystem.Domain.Entities;
@@ -30,7 +29,7 @@ namespace AltecSystem.Application.Handlers.Sales
                 ProductId = dto.ProductId, // Ya es GUID
                 SaleDate = dto.SaleDate,
                 Quantity = dto.Quantity,
-                UnitPrice = dto.UnitPrice,
+                UnitPrice = dto.UnitPrice, // Incluido el precio unitario
                 TaxAmount = dto.TaxAmount,
                 TotalAmount = dto.TotalAmount,
                 PaymentMethod = dto.PaymentMethod,

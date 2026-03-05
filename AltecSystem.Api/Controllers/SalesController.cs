@@ -25,9 +25,12 @@ namespace AltecSystem.Api.Controllers
             if (saleDto.EmployeeId.HasValue && saleDto.EmployeeId == Guid.Empty)
                 return BadRequest(new { error = "The EmployeeId must be a valid GUID or null." });
 
+            if (saleDto.UnitPrice <= 0)
+                return BadRequest(new { error = "The UnitPrice must be greater than 0." });
+
             try
             {
-                var command = new CreateSaleCommand(saleDto);
+                var command = new CreateSaleCommand(saleDto, saleDto.UnitPrice); // Ajustado para incluir UnitPrice en el comando
                 var saleId = await _mediator.Send(command);
                 return CreatedAtAction(nameof(CreateSale), new { id = saleId }, saleId);
             }
