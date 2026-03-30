@@ -11,5 +11,6 @@ namespace AltecSystem.Application.Interfaces
         Task<Sale> AddSaleAsync(Sale sale);
         Task<List<SaleDto>> GetAllSalesAsync();
         Task<List<SalesBasketDto>> GetSalesGroupedByInvoiceNumberAsync();
+        Task CancelInvoiceAsync(string invoiceNumber);
     }
 }

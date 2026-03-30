@@ -29,5 +29,17 @@ namespace AltecSystem.Infrastructure.Repositories
                 .Where(q => q.QuotationNumber == quotationNumber)
                 .ToListAsync();
         }
+
+        public async Task<List<QuotationDetail>> ObtenerTodasAsync()
+        {
+            return await _context.QuotationDetails
+                .OrderByDescending(q => q.CreatedAt)
+                .ToListAsync();
+        }
+
+        public async Task<bool> ExisteAsync(string quotationNumber)
+        {
+            return await _context.QuotationDetails.AnyAsync(q => q.QuotationNumber == quotationNumber);
+        }
     }
 }

@@ -8,5 +8,7 @@ namespace AltecSystem.Application.Interfaces
     {
         Task GuardarAsync(List<QuotationDetail> quotationDetails);
         Task<List<QuotationDetail>> ObtenerPorNumeroCotizacionAsync(string quotationNumber);
+        Task<List<QuotationDetail>> ObtenerTodasAsync();
+        Task<bool> ExisteAsync(string quotationNumber);
     }
 }

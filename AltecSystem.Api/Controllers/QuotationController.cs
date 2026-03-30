@@ -3,6 +3,7 @@ using AltecSystem.Application.Commands.Quotations;
 using AltecSystem.Application.DTOs.Quotations;
 using AltecSystem.Application.Queries.Quotations;
 using MediatR;
+using System;
 
 namespace AltecSystem.Api.Controllers
 {
@@ -15,6 +16,20 @@ namespace AltecSystem.Api.Controllers
         public QuotationController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllQuotations()
+        {
+            try
+            {
+                var response = await _mediator.Send(new GetAllQuotationsQuery());
+                return Ok(response);
+            }
+            catch
+            {
+                return StatusCode(500, new { error = "Ocurrió un error inesperado." });
+            }
         }
 
         [HttpPost]

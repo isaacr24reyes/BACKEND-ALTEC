@@ -35,6 +35,8 @@ namespace AltecSystem.Application.Handlers.Quotations
                 QuotationNumber = d.QuotationNumber,
                 ProductId = d.ProductId,
                 Quantity = d.Quantity,
+                UnitPrice = d.UnitPrice,
+                PriceType = d.PriceType,
                 CreatedAt = d.CreatedAt
             }).ToList();
         }

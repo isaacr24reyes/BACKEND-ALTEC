@@ -20,11 +20,13 @@ namespace AltecSystem.Application.Handlers.Quotations
             _repository = repository;
         }
 
+        private static readonly Random _random = new Random();
+
+        // Ecuador es UTC-5 sin horario de verano
+        private static DateTime AhoraEcuador() => DateTime.UtcNow.AddHours(-5);
+
         public async Task<List<QuotationDetailResponse>> Handle(SaveQuotationCommand request, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrWhiteSpace(request.QuotationNumber))
-                throw new InvalidOperationException("El número de cotización no puede estar vacío.");
-
             if (request.QuotationDetails == null || !request.QuotationDetails.Any())
                 throw new InvalidOperationException("La lista de productos no puede estar vacía.");
 
@@ -37,13 +39,28 @@ namespace AltecSystem.Application.Handlers.Quotations
                     throw new InvalidOperationException("La cantidad debe ser mayor a 0.");
             }
 
+            // Generar número único de 5 dígitos validado contra la BD
+            string quotationNumber;
+            int intentos = 0;
+            do
+            {
+                quotationNumber = _random.Next(10000, 99999).ToString();
+                if (++intentos > 10)
+                    throw new InvalidOperationException("No se pudo generar un número único. Intente nuevamente.");
+            }
+            while (await _repository.ExisteAsync(quotationNumber));
+
+            var ahora = AhoraEcuador();
+
             var entities = request.QuotationDetails.Select(detail => new QuotationDetail
             {
                 Id = Guid.NewGuid(),
-                QuotationNumber = request.QuotationNumber,
+                QuotationNumber = quotationNumber,
                 ProductId = detail.ProductId,
                 Quantity = detail.Quantity,
-                CreatedAt = DateTime.UtcNow
+                UnitPrice = detail.UnitPrice,
+                PriceType = string.IsNullOrWhiteSpace(detail.PriceType) ? "pvp" : detail.PriceType,
+                CreatedAt = ahora
             }).ToList();
 
             await _repository.GuardarAsync(entities);
@@ -54,6 +71,8 @@ namespace AltecSystem.Application.Handlers.Quotations
                 QuotationNumber = e.QuotationNumber,
                 ProductId = e.ProductId,
                 Quantity = e.Quantity,
+                UnitPrice = e.UnitPrice,
+                PriceType = e.PriceType,
                 CreatedAt = e.CreatedAt
             }).ToList();
         }

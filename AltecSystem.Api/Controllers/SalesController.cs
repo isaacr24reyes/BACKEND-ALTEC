@@ -40,6 +40,22 @@ namespace AltecSystem.Api.Controllers
             }
         }
 
+        [HttpPatch("{invoiceNumber}/cancelar")]
+        public async Task<IActionResult> CancelInvoice(string invoiceNumber)
+        {
+            if (string.IsNullOrWhiteSpace(invoiceNumber))
+                return BadRequest(new { error = "El número de factura no puede estar vacío." });
+            try
+            {
+                await _mediator.Send(new CancelInvoiceCommand(invoiceNumber));
+                return Ok(new { message = $"Factura {invoiceNumber} cancelada." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAllSales([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {

@@ -38,7 +38,7 @@ namespace AltecSystem.Application.Handlers.Products
             {
                 Id = Guid.NewGuid(),
                 Categoria = request.Categoria,
-                Codigo = request.Codigo,
+                Codigo = string.IsNullOrWhiteSpace(request.Codigo) ? string.Empty : request.Codigo,
                 IsImport = request.IsImport,
                 Stock = request.Stock,
                 Pvp = pvp,

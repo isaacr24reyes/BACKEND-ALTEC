@@ -100,6 +100,31 @@ namespace AltecSystem.Api.Controllers
             return Ok(result);
         }
 
+        [HttpPatch("{productId}/aumentar-stock")]
+        public async Task<IActionResult> AumentarStock(Guid productId, [FromBody] ReducirStockRequest request)
+        {
+            if (productId == Guid.Empty)
+                return BadRequest(new { error = "El productId debe ser un GUID válido." });
+
+            if (request.Quantity <= 0)
+                return BadRequest(new { error = "La cantidad debe ser mayor a 0." });
+
+            try
+            {
+                var command = new AumentarStockCommand(productId, request.Quantity);
+                var response = await _mediator.Send(command);
+                return Ok(response);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            catch
+            {
+                return StatusCode(500, new { error = "Ocurrió un error inesperado." });
+            }
+        }
+
         [HttpPatch("{productId}/reducir-stock")]
         public async Task<IActionResult> ReducirStock(Guid productId, [FromBody] ReducirStockRequest request)
         {

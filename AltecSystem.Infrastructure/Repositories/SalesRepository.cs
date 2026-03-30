@@ -48,6 +48,18 @@ namespace AltecSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public async Task CancelInvoiceAsync(string invoiceNumber)
+        {
+            var sales = await _context.Sales
+                .Where(s => s.InvoiceNumber == invoiceNumber)
+                .ToListAsync();
+
+            foreach (var sale in sales)
+                sale.Status = "Cancelled";
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<List<SalesBasketDto>> GetSalesGroupedByInvoiceNumberAsync()
         {
             return await _context.Sales

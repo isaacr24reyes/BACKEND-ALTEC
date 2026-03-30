@@ -34,7 +34,7 @@ namespace AltecSystem.Application.Handlers.Sales
                 TotalAmount = dto.TotalAmount,
                 PaymentMethod = dto.PaymentMethod,
                 Status = dto.Status,
-                CreatedAt = DateTime.UtcNow,
+                CreatedAt = DateTime.UtcNow.AddHours(-5),
                 Profit = dto.Profit // Agregado para incluir el campo Profit
             };
             var result = await _salesRepository.AddSaleAsync(sale);

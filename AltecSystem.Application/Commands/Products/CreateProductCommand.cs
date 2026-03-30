@@ -9,8 +9,7 @@ namespace AltecSystem.Application.Commands.Products
         [Required]
         public string Categoria { get; set; }
 
-        [Required] 
-        public string Codigo { get; set; }
+        public string? Codigo { get; set; }   // Opcional: el script lo asigna automáticamente
         [Required] 
         public bool IsImport { get; set; }
 
