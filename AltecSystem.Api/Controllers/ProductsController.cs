@@ -125,6 +125,28 @@ namespace AltecSystem.Api.Controllers
             }
         }
 
+        [HttpPatch("{id}/deactivate")]
+        public async Task<IActionResult> DeactivateProduct(Guid id)
+        {
+            if (id == Guid.Empty)
+                return BadRequest(new { error = "El ID debe ser un GUID válido." });
+
+            try
+            {
+                var command = new DeactivateProductCommand { Id = id };
+                var result = await _mediator.Send(command);
+                return Ok(new { success = result, message = "Producto eliminado correctamente." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { error = ex.Message });
+            }
+            catch
+            {
+                return StatusCode(500, new { error = "Ocurrió un error inesperado." });
+            }
+        }
+
         [HttpPatch("{productId}/reducir-stock")]
         public async Task<IActionResult> ReducirStock(Guid productId, [FromBody] ReducirStockRequest request)
         {
