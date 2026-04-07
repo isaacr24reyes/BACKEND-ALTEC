@@ -41,5 +41,14 @@ namespace AltecSystem.Infrastructure.Repositories
         {
             return await _context.QuotationDetails.AnyAsync(q => q.QuotationNumber == quotationNumber);
         }
+
+        public async Task EliminarPorNumeroAsync(string quotationNumber)
+        {
+            var details = await _context.QuotationDetails
+                .Where(q => q.QuotationNumber == quotationNumber)
+                .ToListAsync();
+            _context.QuotationDetails.RemoveRange(details);
+            await _context.SaveChangesAsync();
+        }
     }
 }

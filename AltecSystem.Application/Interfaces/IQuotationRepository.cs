@@ -10,5 +10,6 @@ namespace AltecSystem.Application.Interfaces
         Task<List<QuotationDetail>> ObtenerPorNumeroCotizacionAsync(string quotationNumber);
         Task<List<QuotationDetail>> ObtenerTodasAsync();
         Task<bool> ExisteAsync(string quotationNumber);
+        Task EliminarPorNumeroAsync(string quotationNumber);
     }
 }

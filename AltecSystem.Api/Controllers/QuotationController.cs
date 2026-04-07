@@ -55,6 +55,29 @@ namespace AltecSystem.Api.Controllers
             }
         }
 
+        [HttpPut("{quotationNumber}")]
+        public async Task<IActionResult> UpdateQuotation(string quotationNumber, [FromBody] UpdateQuotationCommand command)
+        {
+            if (string.IsNullOrWhiteSpace(quotationNumber))
+                return BadRequest(new { error = "El número de cotización no puede estar vacío." });
+
+            command.QuotationNumber = quotationNumber;
+
+            try
+            {
+                var response = await _mediator.Send(command);
+                return Ok(response);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            catch
+            {
+                return StatusCode(500, new { error = "Ocurrió un error inesperado." });
+            }
+        }
+
         [HttpGet("{quotationNumber}")]
         public async Task<IActionResult> GetQuotationDetails(string quotationNumber)
         {
