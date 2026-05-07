@@ -11,6 +11,8 @@ namespace AltecSystem.Domain.Persistence
         public DbSet<Product> Productos { get; set; }
         public DbSet<Sale> Sales { get; set; } // Agregado para incluir la entidad Sale
         public DbSet<QuotationDetail> QuotationDetails { get; set; } // Agregado para incluir la entidad QuotationDetail
+        public DbSet<MundialCode> MundialCodes { get; set; }
+        public DbSet<MundialPronostico> MundialPronosticos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,6 +40,40 @@ namespace AltecSystem.Domain.Persistence
             modelBuilder.Entity<Sale>()
                 .HasIndex(s => s.InvoiceNumber)
                 .IsUnique(false);
+
+            // MundialCodes: Codigo único
+            modelBuilder.Entity<MundialCode>()
+                .HasIndex(m => m.Codigo)
+                .IsUnique();
+
+            modelBuilder.Entity<MundialCode>()
+                .Property(m => m.Codigo)
+                .HasMaxLength(10)
+                .IsRequired();
+
+            modelBuilder.Entity<MundialCode>()
+                .Property(m => m.CreatedBy)
+                .HasMaxLength(100)
+                .IsRequired();
+
+            // MundialPronosticos
+            modelBuilder.Entity<MundialPronostico>()
+                .HasIndex(p => p.CodigoUnico)
+                .IsUnique();
+
+            modelBuilder.Entity<MundialPronostico>()
+                .Property(p => p.CodigoUnico)
+                .HasMaxLength(10)
+                .IsRequired();
+
+            modelBuilder.Entity<MundialPronostico>()
+                .Property(p => p.Nombre)
+                .HasMaxLength(150)
+                .IsRequired();
+
+            modelBuilder.Entity<MundialPronostico>()
+                .Property(p => p.Telefono)
+                .HasMaxLength(20);
         }
     }
 }
