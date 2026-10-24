@@ -35,7 +35,7 @@ namespace AltecSystem.Api.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al listar cotizaciones importadas");
+                _logger.LogError(ex, "Error al listar importaciones");
                 return StatusCode(500, new { error = "Ocurrió un error inesperado." });
             }
         }
@@ -60,8 +60,8 @@ namespace AltecSystem.Api.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al guardar la cotización importada '{Nombre}'", command.Nombre);
-                return StatusCode(500, new { error = "Ocurrió un error inesperado al guardar la cotización." });
+                _logger.LogError(ex, "Error al guardar la importación '{Nombre}'", command.Nombre);
+                return StatusCode(500, new { error = "Ocurrió un error inesperado al guardar la importación." });
             }
         }
 
@@ -72,13 +72,13 @@ namespace AltecSystem.Api.Controllers
             {
                 var detail = await _mediator.Send(new GetImportedQuotationDetailQuery(id));
                 if (detail == null)
-                    return NotFound(new { error = "Cotización no encontrada." });
+                    return NotFound(new { error = "Importación no encontrada." });
 
                 return Ok(detail);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener el detalle de la cotización importada {Id}", id);
+                _logger.LogError(ex, "Error al obtener el detalle de la importación {Id}", id);
                 return StatusCode(500, new { error = "Ocurrió un error inesperado." });
             }
         }
@@ -90,13 +90,13 @@ namespace AltecSystem.Api.Controllers
             {
                 var file = await _mediator.Send(new GetImportedQuotationFileQuery(id));
                 if (file == null)
-                    return NotFound(new { error = "Cotización no encontrada." });
+                    return NotFound(new { error = "Importación no encontrada." });
 
                 return File(file.Archivo, file.ContentType, file.NombreArchivo);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al descargar la cotización importada {Id}", id);
+                _logger.LogError(ex, "Error al descargar la importación {Id}", id);
                 return StatusCode(500, new { error = "Ocurrió un error inesperado." });
             }
         }
