@@ -42,7 +42,6 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ISalesRepository, SalesRepository>();
 builder.Services.AddTransient<IQuotationRepository, QuotationRepository>();
-builder.Services.AddScoped<IMundialRepository, MundialRepository>();
 
 // ✅ Configuración de controladores y Swagger
 builder.Services.AddControllers();
