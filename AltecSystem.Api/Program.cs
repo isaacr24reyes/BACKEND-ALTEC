@@ -42,6 +42,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ISalesRepository, SalesRepository>();
 builder.Services.AddTransient<IQuotationRepository, QuotationRepository>();
+builder.Services.AddScoped<IImportedQuotationRepository, ImportedQuotationRepository>();
+builder.Services.AddSingleton<IQuotationExcelReader, QuotationExcelReader>();
 
 // ✅ Configuración de controladores y Swagger
 builder.Services.AddControllers();
