@@ -16,6 +16,8 @@ public class ElectronicInvoiceResultDto
     public decimal ImporteTotal { get; set; }
     public string? EmailComprador { get; set; }
     public bool EmailEnviado { get; set; }
+    public DateTimeOffset? FechaAnulacion { get; set; }
+    public string? MotivoAnulacion { get; set; }
     public List<SriMessageDto> Mensajes { get; set; } = new();
 }
 
@@ -36,4 +38,9 @@ public static class SriInvoiceStates
     public const string Devuelta = "DEVUELTA";
     public const string Autorizado = "AUTORIZADO";
     public const string NoAutorizado = "NO AUTORIZADO";
+    /// <summary>Anulada en SRI en línea y registrada en ALTEC.</summary>
+    public const string Anulada = "ANULADA";
+
+    /// <summary>Estados que aún pueden llegar a autorizarse (se reintentan).</summary>
+    public static readonly string[] Pendientes = { Firmada, ErrorEnvio, Recibida };
 }

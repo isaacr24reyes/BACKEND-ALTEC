@@ -70,3 +70,29 @@ public class GetElectronicInvoicePdfHandler : IRequestHandler<GetElectronicInvoi
     public Task<(byte[] Pdf, string NumeroFactura)?> Handle(GetElectronicInvoicePdfQuery request, CancellationToken cancellationToken)
         => _processor.GetPdfAsync(request.Id, cancellationToken);
 }
+
+public class ListElectronicInvoicesHandler : IRequestHandler<ListElectronicInvoicesQuery, ElectronicInvoicePageDto>
+{
+    private readonly ElectronicInvoiceProcessor _processor;
+
+    public ListElectronicInvoicesHandler(ElectronicInvoiceProcessor processor)
+    {
+        _processor = processor;
+    }
+
+    public Task<ElectronicInvoicePageDto> Handle(ListElectronicInvoicesQuery request, CancellationToken cancellationToken)
+        => _processor.ListAsync(request.Filter, cancellationToken);
+}
+
+public class AnularElectronicInvoiceHandler : IRequestHandler<AnularElectronicInvoiceCommand, ElectronicInvoiceResultDto>
+{
+    private readonly ElectronicInvoiceProcessor _processor;
+
+    public AnularElectronicInvoiceHandler(ElectronicInvoiceProcessor processor)
+    {
+        _processor = processor;
+    }
+
+    public Task<ElectronicInvoiceResultDto> Handle(AnularElectronicInvoiceCommand request, CancellationToken cancellationToken)
+        => _processor.AnularAsync(request.Id, request.Request, cancellationToken);
+}
