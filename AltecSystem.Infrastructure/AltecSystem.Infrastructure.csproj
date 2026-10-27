@@ -1,6 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <PackageReference Include="MailKit" Version="4.8.0" />
+    <PackageReference Include="QuestPDF" Version="2024.12.3" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="8.0.2" />
     <ProjectReference Include="..\AltecSystem.Domain\AltecSystem.Domain.csproj" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.3" />
@@ -18,5 +21,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\logo-altec.jpeg" LogicalName="AltecSystem.Infrastructure.Resources.logo-altec.jpeg" />
+  </ItemGroup>
 
 </Project>

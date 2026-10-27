@@ -13,6 +13,11 @@ namespace AltecSystem.Domain.Persistence
         public DbSet<QuotationDetail> QuotationDetails { get; set; } // Agregado para incluir la entidad QuotationDetail
         public DbSet<ImportedQuotation> ImportedQuotations { get; set; }
         public DbSet<ImportedQuotationItem> ImportedQuotationItems { get; set; }
+        public DbSet<SriSettings> SriSettings { get; set; }
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<ElectronicInvoice> ElectronicInvoices { get; set; }
+        public DbSet<ElectronicInvoiceItem> ElectronicInvoiceItems { get; set; }
+        public DbSet<ElectronicInvoicePayment> ElectronicInvoicePayments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -64,6 +69,49 @@ namespace AltecSystem.Domain.Persistence
                 e.Property(i => i.Cantidad).HasColumnType("decimal(18,4)");
                 e.Property(i => i.PrecioUnitario).HasColumnType("decimal(18,6)");
                 e.Property(i => i.Total).HasColumnType("decimal(18,6)");
+            });
+
+            // Facturación electrónica SRI (script: Database/002_facturacion_electronica.sql)
+            modelBuilder.Entity<SriSettings>(e =>
+            {
+                e.ToTable("SriSettings");
+                e.Property(s => s.Id).ValueGeneratedNever();
+                e.Property(s => s.TarifaIva).HasColumnType("decimal(5,2)");
+            });
+
+            modelBuilder.Entity<Customer>(e =>
+            {
+                e.Property(c => c.Identificacion).HasMaxLength(20).IsRequired();
+                e.Property(c => c.RazonSocial).HasMaxLength(300).IsRequired();
+                e.HasIndex(c => c.Identificacion).IsUnique();
+            });
+
+            modelBuilder.Entity<ElectronicInvoice>(e =>
+            {
+                e.Property(i => i.FechaEmision).HasColumnType("date");
+                e.Property(i => i.TotalSinImpuestos).HasColumnType("decimal(18,2)");
+                e.Property(i => i.TotalDescuento).HasColumnType("decimal(18,2)");
+                e.Property(i => i.TotalIva).HasColumnType("decimal(18,2)");
+                e.Property(i => i.ImporteTotal).HasColumnType("decimal(18,2)");
+                e.HasIndex(i => i.ClaveAcceso).IsUnique();
+                e.HasOne<Customer>().WithMany().HasForeignKey(i => i.CustomerId);
+                e.HasMany(i => i.Items).WithOne().HasForeignKey(it => it.ElectronicInvoiceId).OnDelete(DeleteBehavior.Cascade);
+                e.HasMany(i => i.Payments).WithOne().HasForeignKey(p => p.ElectronicInvoiceId).OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<ElectronicInvoiceItem>(e =>
+            {
+                e.Property(i => i.Cantidad).HasColumnType("decimal(18,6)");
+                e.Property(i => i.PrecioUnitario).HasColumnType("decimal(18,6)");
+                e.Property(i => i.Descuento).HasColumnType("decimal(18,2)");
+                e.Property(i => i.PrecioTotalSinImpuesto).HasColumnType("decimal(18,2)");
+                e.Property(i => i.TarifaIva).HasColumnType("decimal(5,2)");
+                e.Property(i => i.ValorIva).HasColumnType("decimal(18,2)");
+            });
+
+            modelBuilder.Entity<ElectronicInvoicePayment>(e =>
+            {
+                e.Property(p => p.Total).HasColumnType("decimal(18,2)");
             });
         }
     }

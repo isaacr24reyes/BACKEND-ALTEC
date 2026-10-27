@@ -7,6 +7,8 @@ using AltecSystem.Infrastructure.Repositories;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using AltecSystem.Application.Queries.Sales;
+using AltecSystem.Application.Services.Sri;
+using AltecSystem.Infrastructure.Sri;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<CloudinaryService>();
@@ -44,6 +46,17 @@ builder.Services.AddScoped<ISalesRepository, SalesRepository>();
 builder.Services.AddTransient<IQuotationRepository, QuotationRepository>();
 builder.Services.AddScoped<IImportedQuotationRepository, ImportedQuotationRepository>();
 builder.Services.AddSingleton<IQuotationExcelReader, QuotationExcelReader>();
+
+// Facturación electrónica SRI (configuración en la sección "Sri")
+builder.Services.AddSingleton<SriConfiguration>();
+builder.Services.AddSingleton<ISriConfiguration>(sp => sp.GetRequiredService<SriConfiguration>());
+builder.Services.AddSingleton<ISriInvoiceXmlBuilder, SriInvoiceXmlBuilder>();
+builder.Services.AddSingleton<ISriXmlSigner, SriXadesSigner>();
+builder.Services.AddHttpClient<ISriWebServiceClient, SriWebServiceClient>();
+builder.Services.AddScoped<IElectronicInvoiceRepository, ElectronicInvoiceRepository>();
+builder.Services.AddScoped<ElectronicInvoiceProcessor>();
+builder.Services.AddSingleton<IInvoicePdfGenerator, RideInvoicePdfGenerator>();
+builder.Services.AddSingleton<IInvoiceEmailSender, SmtpInvoiceEmailSender>();
 
 // ✅ Configuración de controladores y Swagger
 builder.Services.AddControllers();
