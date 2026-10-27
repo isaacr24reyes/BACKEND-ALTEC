@@ -57,6 +57,7 @@ builder.Services.AddScoped<IElectronicInvoiceRepository, ElectronicInvoiceReposi
 builder.Services.AddScoped<ElectronicInvoiceProcessor>();
 builder.Services.AddSingleton<IInvoicePdfGenerator, RideInvoicePdfGenerator>();
 builder.Services.AddSingleton<IInvoiceEmailSender, SmtpInvoiceEmailSender>();
+builder.Services.AddHostedService<AltecSystem.Infrastructure.BackgroundJobs.PendingInvoiceRetryService>();
 
 // ✅ Configuración de controladores y Swagger
 builder.Services.AddControllers();

@@ -95,6 +95,7 @@ namespace AltecSystem.Domain.Persistence
                 e.Property(i => i.ImporteTotal).HasColumnType("decimal(18,2)");
                 e.HasIndex(i => i.ClaveAcceso).IsUnique();
                 e.HasOne<Customer>().WithMany().HasForeignKey(i => i.CustomerId);
+                e.Property(i => i.MotivoAnulacion).HasMaxLength(300);
                 e.HasMany(i => i.Items).WithOne().HasForeignKey(it => it.ElectronicInvoiceId).OnDelete(DeleteBehavior.Cascade);
                 e.HasMany(i => i.Payments).WithOne().HasForeignKey(p => p.ElectronicInvoiceId).OnDelete(DeleteBehavior.Cascade);
             });

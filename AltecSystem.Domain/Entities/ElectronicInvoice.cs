@@ -30,6 +30,9 @@ public class ElectronicInvoice
     public string? XmlAutorizado { get; set; }
     public string? SaleInvoiceNumber { get; set; }
     public bool EmailEnviado { get; set; }
+    /// <summary>Fecha en que se registró en ALTEC la anulación hecha en SRI en línea.</summary>
+    public DateTimeOffset? FechaAnulacion { get; set; }
+    public string? MotivoAnulacion { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
     public string CreatedBy { get; set; } = string.Empty;

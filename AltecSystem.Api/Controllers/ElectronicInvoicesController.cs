@@ -65,6 +65,31 @@ namespace AltecSystem.Api.Controllers
             }
         }
 
+        /// <summary>Histórico de facturas con filtros (fecha, estado, texto) y paginación.</summary>
+        [HttpGet("facturas")]
+        public async Task<IActionResult> List([FromQuery] ElectronicInvoiceFilter filter, CancellationToken ct)
+        {
+            return Ok(await _mediator.Send(new ListElectronicInvoicesQuery(filter), ct));
+        }
+
+        /// <summary>Registra la anulación hecha en SRI en línea; opcionalmente cancela la venta y devuelve el stock.</summary>
+        [HttpPost("facturas/{id:guid}/anular")]
+        public async Task<IActionResult> Anular(Guid id, [FromBody] AnularElectronicInvoiceRequest? body, CancellationToken ct)
+        {
+            try
+            {
+                return Ok(await _mediator.Send(new AnularElectronicInvoiceCommand(id, body ?? new AnularElectronicInvoiceRequest()), ct));
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { error = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
         [HttpGet("facturas/{id:guid}")]
         public async Task<IActionResult> Get(Guid id, CancellationToken ct)
         {

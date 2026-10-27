@@ -23,7 +23,7 @@ public class SriWebServiceClient : ISriWebServiceClient
     public SriWebServiceClient(HttpClient http)
     {
         _http = http;
-        _http.Timeout = TimeSpan.FromSeconds(60);
+        _http.Timeout = TimeSpan.FromSeconds(30);
     }
 
     public async Task<SriReceptionResult> SendAsync(string signedXml, byte ambiente, CancellationToken ct = default)

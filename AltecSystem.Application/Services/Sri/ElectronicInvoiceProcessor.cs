@@ -191,6 +191,55 @@ public class ElectronicInvoiceProcessor
         return ToDto(invoice);
     }
 
+    /// <summary>Histórico de facturas del ambiente configurado (o del indicado en el filtro).</summary>
+    public Task<ElectronicInvoicePageDto> ListAsync(ElectronicInvoiceFilter filter, CancellationToken ct)
+        => _repository.ListAsync(filter, filter.Ambiente is 1 or 2 ? filter.Ambiente.Value : _config.Ambiente, ct);
+
+    /// <summary>
+    /// Reintenta las facturas pendientes recientes (lo llama el servicio en segundo plano).
+    /// Devuelve cuántas quedaron autorizadas.
+    /// </summary>
+    public async Task<int> RetryPendingAsync(TimeSpan maxAge, CancellationToken ct)
+    {
+        var ids = await _repository.GetPendingIdsAsync(_config.Ambiente, EcuadorNow() - maxAge, ct);
+        var autorizadas = 0;
+        foreach (var id in ids)
+        {
+            var result = await RetryAsync(id, ct);
+            if (result.Autorizada) autorizadas++;
+        }
+        return autorizadas;
+    }
+
+    /// <summary>
+    /// Registra la anulación hecha en SRI en línea (el SRI no ofrece un servicio para pedirla desde un sistema).
+    /// Opcionalmente cancela la venta asociada y devuelve el stock, todo en un solo guardado.
+    /// </summary>
+    public async Task<ElectronicInvoiceResultDto> AnularAsync(Guid id, AnularElectronicInvoiceRequest request, CancellationToken ct)
+    {
+        var invoice = await _repository.GetAsync(id, ct)
+            ?? throw new KeyNotFoundException("Factura no encontrada.");
+
+        if (invoice.Estado == SriInvoiceStates.Anulada)
+            throw new InvalidOperationException("La factura ya está anulada.");
+        if (invoice.Estado != SriInvoiceStates.Autorizado)
+            throw new InvalidOperationException("Solo se pueden anular facturas autorizadas por el SRI.");
+
+        var motivo = request.Motivo?.Trim();
+        if (motivo?.Length > 300) motivo = motivo[..300];
+
+        if (request.CancelarVenta && !string.IsNullOrWhiteSpace(invoice.SaleInvoiceNumber))
+            await _repository.CancelSaleAndRestoreStockAsync(invoice.SaleInvoiceNumber, ct);
+
+        invoice.Estado = SriInvoiceStates.Anulada;
+        invoice.FechaAnulacion = EcuadorNow();
+        invoice.MotivoAnulacion = string.IsNullOrEmpty(motivo) ? null : motivo;
+        Touch(invoice);
+
+        await _repository.SaveChangesAsync(ct);
+        return ToDto(invoice);
+    }
+
     /// <summary>PDF (RIDE) de la factura.</summary>
     public async Task<(byte[] Pdf, string NumeroFactura)?> GetPdfAsync(Guid id, CancellationToken ct)
     {
@@ -320,7 +369,10 @@ public class ElectronicInvoiceProcessor
             // Sin conexión con el SRI: la factura queda firmada y se puede reintentar
             if (invoice.Estado == SriInvoiceStates.Firmada)
                 invoice.Estado = SriInvoiceStates.ErrorEnvio;
-            SetMessages(invoice, new List<SriMessageDto> { new() { Identificador = "RED", Mensaje = ex.Message, Tipo = "ERROR" } });
+            var mensaje = invoice.Estado == SriInvoiceStates.Recibida
+                ? "El SRI está demorando en autorizar. La factura quedó recibida y se autorizará automáticamente en unos minutos."
+                : "No hubo respuesta del SRI. La factura quedó guardada y se reenviará automáticamente en unos minutos.";
+            SetMessages(invoice, new List<SriMessageDto> { new() { Identificador = "RED", Mensaje = mensaje, InformacionAdicional = ex.Message, Tipo = "ADVERTENCIA" } });
         }
 
         Touch(invoice);
@@ -421,6 +473,8 @@ public class ElectronicInvoiceProcessor
         ImporteTotal = i.ImporteTotal,
         EmailComprador = i.EmailComprador,
         EmailEnviado = i.EmailEnviado,
+        FechaAnulacion = i.FechaAnulacion,
+        MotivoAnulacion = i.MotivoAnulacion,
         Mensajes = string.IsNullOrWhiteSpace(i.MensajesSri)
             ? new List<SriMessageDto>()
             : JsonSerializer.Deserialize<List<SriMessageDto>>(i.MensajesSri) ?? new List<SriMessageDto>()
