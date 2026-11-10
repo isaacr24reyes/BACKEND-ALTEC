@@ -9,4 +9,6 @@ public interface IImportedQuotationRepository
     Task<List<ImportedQuotationSummaryDto>> GetSummariesAsync(DateTime? desde, DateTime? hasta, string? buscar, CancellationToken ct = default);
     Task<ImportedQuotationDetailDto?> GetDetailAsync(Guid id, CancellationToken ct = default);
     Task<ImportedQuotationFileDto?> GetFileAsync(Guid id, CancellationToken ct = default);
+    /// <summary>Guarda los costos extras; devuelve false si la importación no existe.</summary>
+    Task<bool> UpdateExtraCostsAsync(Guid id, decimal costosExtras, string? nota, CancellationToken ct = default);
 }

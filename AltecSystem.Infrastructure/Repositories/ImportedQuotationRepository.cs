@@ -63,6 +63,8 @@ public class ImportedQuotationRepository : IImportedQuotationRepository
                 TamanoBytes = q.TamanoBytes,
                 TotalItems = q.TotalItems,
                 TotalMonto = q.TotalMonto,
+                CostosExtras = q.CostosExtras,
+                CostosExtrasNota = q.CostosExtrasNota,
                 CreatedAt = q.CreatedAt,
                 CreatedBy = q.CreatedBy
             })
@@ -84,6 +86,8 @@ public class ImportedQuotationRepository : IImportedQuotationRepository
                 TamanoBytes = q.TamanoBytes,
                 TotalItems = q.TotalItems,
                 TotalMonto = q.TotalMonto,
+                CostosExtras = q.CostosExtras,
+                CostosExtrasNota = q.CostosExtrasNota,
                 CreatedAt = q.CreatedAt,
                 CreatedBy = q.CreatedBy
             })
@@ -106,7 +110,51 @@ public class ImportedQuotationRepository : IImportedQuotationRepository
             })
             .ToListAsync(ct);
 
+        ApplyExtraCosts(detail);
         return detail;
+    }
+
+    /// <summary>
+    /// Reparte los costos extras entre las filas según su valor: cada producto absorbe
+    /// el mismo % de recargo sobre su costo en China (aduana, IVA o comisiones se cobran
+    /// sobre el valor). Si el Excel no trae valores, se reparte por cantidad.
+    /// </summary>
+    private static void ApplyExtraCosts(ImportedQuotationDetailDto detail)
+    {
+        var extras = detail.CostosExtras;
+        var valorTotal = detail.Items.Sum(i => i.Total);
+        var cantidadTotal = detail.Items.Sum(i => i.Cantidad);
+
+        foreach (var item in detail.Items)
+        {
+            decimal parte = 0;
+            if (extras != 0)
+            {
+                if (valorTotal > 0)
+                    parte = extras * item.Total / valorTotal;
+                else if (cantidadTotal > 0)
+                    parte = extras * item.Cantidad / cantidadTotal;
+            }
+
+            item.CostoEcuadorTotal = Math.Round(item.Total + parte, 4);
+            item.CostoEcuadorUnitario = item.Cantidad > 0
+                ? Math.Round(item.CostoEcuadorTotal / item.Cantidad, 4)
+                : item.PrecioUnitario;
+        }
+
+        detail.PorcentajeRecargo = valorTotal > 0 ? Math.Round(extras / valorTotal * 100, 2) : 0;
+        detail.TotalEcuador = valorTotal + extras;
+    }
+
+    public async Task<bool> UpdateExtraCostsAsync(Guid id, decimal costosExtras, string? nota, CancellationToken ct = default)
+    {
+        // Solo se actualizan las dos columnas: no se carga el Excel guardado
+        var updated = await _context.ImportedQuotations
+            .Where(q => q.Id == id)
+            .ExecuteUpdateAsync(s => s
+                .SetProperty(q => q.CostosExtras, costosExtras)
+                .SetProperty(q => q.CostosExtrasNota, nota), ct);
+        return updated > 0;
     }
 
     public async Task<ImportedQuotationFileDto?> GetFileAsync(Guid id, CancellationToken ct = default)

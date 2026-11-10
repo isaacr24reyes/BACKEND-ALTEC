@@ -46,6 +46,8 @@ builder.Services.AddScoped<ISalesRepository, SalesRepository>();
 builder.Services.AddTransient<IQuotationRepository, QuotationRepository>();
 builder.Services.AddScoped<IImportedQuotationRepository, ImportedQuotationRepository>();
 builder.Services.AddSingleton<IQuotationExcelReader, QuotationExcelReader>();
+builder.Services.AddSingleton<IQuotationImageExtractor, QuotationImageExtractor>();
+builder.Services.AddMemoryCache();
 
 // Facturación electrónica SRI (configuración en la sección "Sri")
 builder.Services.AddSingleton<SriConfiguration>();

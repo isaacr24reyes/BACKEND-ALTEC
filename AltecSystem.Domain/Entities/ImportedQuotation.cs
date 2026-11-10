@@ -12,6 +12,9 @@ public class ImportedQuotation
     public byte[] Archivo { get; set; } = Array.Empty<byte>();
     public int TotalItems { get; set; }
     public decimal TotalMonto { get; set; }
+    /// <summary>Gastos para que la mercadería llegue a Ecuador (aduana, IVA, Alibaba, impuesto TC...).</summary>
+    public decimal CostosExtras { get; set; }
+    public string? CostosExtrasNota { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public string CreatedBy { get; set; } = string.Empty;
 

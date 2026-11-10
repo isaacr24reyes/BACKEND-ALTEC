@@ -55,6 +55,8 @@ namespace AltecSystem.Domain.Persistence
                 e.Property(q => q.ContentType).HasMaxLength(150).IsRequired();
                 e.Property(q => q.Archivo).HasColumnType("varbinary(max)").IsRequired();
                 e.Property(q => q.TotalMonto).HasColumnType("decimal(18,4)");
+                e.Property(q => q.CostosExtras).HasColumnType("decimal(18,4)");
+                e.Property(q => q.CostosExtrasNota).HasMaxLength(300);
                 e.Property(q => q.CreatedBy).HasMaxLength(100).IsRequired();
                 e.HasIndex(q => q.Fecha);
                 e.HasMany(q => q.Items)
