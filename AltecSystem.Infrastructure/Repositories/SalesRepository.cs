@@ -62,8 +62,10 @@ namespace AltecSystem.Infrastructure.Repositories
 
         public async Task<List<SalesBasketDto>> GetSalesGroupedByInvoiceNumberAsync()
         {
+            // Más recientes primero: si se pagina, la página 1 trae las últimas ventas
             return await _context.Sales
                 .GroupBy(s => s.InvoiceNumber)
+                .OrderByDescending(g => g.Max(s => s.SaleDate))
                 .Select(g => new SalesBasketDto
                 {
                     InvoiceNumber = g.Key,
